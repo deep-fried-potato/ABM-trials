@@ -30,9 +30,9 @@ to go
     [ stop ]  ;; stop the simulation if everyone is happy
 
   ask turtles [ move-to my-group-site ]  ;; put all people back to their group sites
-  ask turtles [ leave-if-full ]
   ask turtles [ update-happiness ]
   ask turtles [ leave-if-unhappy ]
+
 
   find-new-groups
   update-labels
@@ -48,17 +48,17 @@ to update-happiness  ;; turtle procedure
   let total count turtles-here
   let same count turtles-here with [color = [color] of myself]
   let opposite (total - same)
+  let extra (total - max-group-size)
+  let group-happy (extra / max-group-size) <= (group-size-tolerance / 100)
+  if not consider-group-tolerance [
+    set group-happy true
+  ]
   ;; you are happy if the proportion of people of the opposite sex
   ;; does not exceed your tolerance
-  set happy? (opposite / total) <= (tolerance / 100)
+  set happy? (((opposite / total) <= (tolerance / 100)) and group-happy)
 end
 
-to leave-if-full
-  if count turtles-here > max-group-size [
-    set heading one-of [90 270]  ;; randomly face right or left
-    fd 1                         ;; leave old group
-  ]
-end
+
 
 to leave-if-unhappy  ;; turtle procedure
   if not happy? [
@@ -240,7 +240,7 @@ tolerance
 tolerance
 0.0
 99.0
-28.0
+25.0
 1.0
 1
 %
@@ -255,7 +255,7 @@ number
 number
 0
 300
-70.0
+64.0
 1
 1
 NIL
@@ -348,6 +348,32 @@ max-group-size
 1
 NIL
 HORIZONTAL
+
+SLIDER
+40
+240
+217
+273
+group-size-tolerance
+group-size-tolerance
+0
+100
+17.0
+1
+1
+%
+HORIZONTAL
+
+SWITCH
+40
+290
+232
+323
+consider-group-tolerance
+consider-group-tolerance
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
