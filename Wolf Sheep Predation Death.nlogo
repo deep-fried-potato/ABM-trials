@@ -4,7 +4,7 @@ globals [ max-sheep ]  ; don't let the sheep population grow too large
 breed [ sheep a-sheep ]  ; sheep is its own plural, so we use "a-sheep" as the singular
 breed [ wolves wolf ]
 
-turtles-own [ energy age avg-lifespan ]       ; both wolves and sheep have energy
+turtles-own [ energy age avg-lifespan deviation ]       ; both wolves and sheep have energy
 
 patches-own [ countdown ]    ; this is for the sheep-wolves-grass model version
 
@@ -36,6 +36,7 @@ to setup
     set energy random (2 * sheep-gain-from-food)
     set age 0
     set avg-lifespan sheep-lifespan
+    set deviation sheep-life-standard-deviation
     setxy random-xcor random-ycor
   ]
 
@@ -47,6 +48,7 @@ to setup
     set energy random (2 * wolf-gain-from-food)
     set age 0
     set avg-lifespan wolf-lifespan
+    set deviation wolf-life-standard-deviation
     setxy random-xcor random-ycor
   ]
   display-labels
@@ -130,7 +132,7 @@ to age-and-death  ; turtle procedure (i.e. both wolf and sheep procedure)
   ; when energy dips below zero, die
   set age age + 1
   if energy < 0 [ die ]
-  if age > avg-lifespan [ die ]
+  if age > random-normal avg-lifespan deviation [ die ]
 end
 
 to grow-grass  ; patch procedure
@@ -445,6 +447,36 @@ SLIDER
 153
 wolf-lifespan
 wolf-lifespan
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1130
+70
+1342
+103
+sheep-life-standard-deviation
+sheep-life-standard-deviation
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1130
+120
+1332
+153
+wolf-life-standard-deviation
+wolf-life-standard-deviation
 0
 100
 50.0
