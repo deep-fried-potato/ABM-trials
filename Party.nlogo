@@ -1,6 +1,7 @@
 globals [
   group-sites    ;; agentset of patches where groups are located
   boring-groups  ;; how many groups are currently single-sex
+  overall-happiness
 ]
 
 turtles-own [
@@ -10,6 +11,7 @@ turtles-own [
 
 to setup
   clear-all
+  set overall-happiness 0
   set group-sites patches with [group-site?]
   set-default-shape turtles "person"
   create-turtles number [
@@ -26,6 +28,7 @@ to setup
 end
 
 to go
+
   if all? turtles [happy?]
     [ stop ]  ;; stop the simulation if everyone is happy
 
@@ -33,7 +36,7 @@ to go
   ask turtles [ update-happiness ]
   ask turtles [ leave-if-unhappy ]
 
-
+  update-overall-happiness
   find-new-groups
   update-labels
   count-boring-groups
@@ -49,7 +52,7 @@ to update-happiness  ;; turtle procedure
   let same count turtles-here with [color = [color] of myself]
   let opposite (total - same)
   let extra (total - max-group-size)
-  let group-happy (extra / max-group-size) <= (group-size-tolerance / 100)
+  let group-happy (extra / total) <= (group-size-tolerance / 100)
   if not consider-group-tolerance [
     set group-happy true
   ]
@@ -58,7 +61,14 @@ to update-happiness  ;; turtle procedure
   set happy? (((opposite / total) <= (tolerance / 100)) and group-happy)
 end
 
+to update-overall-happiness
+  let happy-turtles count turtles with [happy?]
+  set overall-happiness overall-happiness + (happy-turtles / number)
+end
 
+to-report average-happiness
+  report overall-happiness /( ticks + 1)
+end
 
 to leave-if-unhappy  ;; turtle procedure
   if not happy? [
@@ -255,17 +265,17 @@ number
 number
 0
 300
-64.0
+90.0
 1
 1
 NIL
 HORIZONTAL
 
 PLOT
-15
-385
-265
-550
+720
+225
+970
+390
 Number Happy
 clock
 NIL
@@ -314,9 +324,9 @@ HORIZONTAL
 
 MONITOR
 80
-335
+275
 205
-380
+320
 number happy
 count turtles with [happy?]
 3
@@ -324,10 +334,10 @@ count turtles with [happy?]
 11
 
 MONITOR
-75
-560
-200
-605
+780
+405
+905
+450
 single sex groups
 boring-groups
 3
@@ -335,30 +345,30 @@ boring-groups
 11
 
 SLIDER
-40
-185
-212
-218
+45
+155
+217
+188
 max-group-size
 max-group-size
 0
 100
-10.0
+6.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-40
-240
-217
-273
+45
+200
+222
+233
 group-size-tolerance
 group-size-tolerance
 0
 100
-17.0
+10.0
 1
 1
 %
@@ -366,14 +376,36 @@ HORIZONTAL
 
 SWITCH
 40
-290
+240
 232
-323
+273
 consider-group-tolerance
 consider-group-tolerance
 0
 1
 -1000
+
+MONITOR
+80
+330
+207
+375
+NIL
+average-happiness
+17
+1
+11
+
+MONITOR
+90
+390
+197
+435
+congestion-factor
+number /( num-groups * max-group-size )
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -760,6 +792,27 @@ setup
 repeat 20 [ go ]
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="congestion-happiness" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="10000"/>
+    <metric>average-happiness</metric>
+    <metric>number /( num-groups * max-group-size )</metric>
+    <enumeratedValueSet variable="tolerance">
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="group-size-tolerance">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="number" first="10" step="10" last="90"/>
+    <steppedValueSet variable="num-groups" first="2" step="1" last="10"/>
+    <steppedValueSet variable="max-group-size" first="3" step="1" last="10"/>
+    <enumeratedValueSet variable="consider-group-tolerance">
+      <value value="true"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
