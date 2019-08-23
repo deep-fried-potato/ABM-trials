@@ -231,7 +231,7 @@ sheep-reproduce
 sheep-reproduce
 0
 20.0
-2.0
+5.0
 1.0
 1
 %
@@ -246,7 +246,7 @@ initial-number-wolves
 initial-number-wolves
 0
 250
-0.0
+20.0
 1
 1
 NIL
@@ -291,7 +291,7 @@ grass-regrowth-time
 grass-regrowth-time
 0
 100
-11.0
+0.0
 1
 1
 NIL
@@ -434,7 +434,7 @@ sheep-lifespan
 sheep-lifespan
 0
 100
-48.0
+100.0
 1
 1
 NIL
@@ -449,7 +449,7 @@ wolf-lifespan
 wolf-lifespan
 0
 100
-50.0
+20.0
 1
 1
 NIL
@@ -464,7 +464,7 @@ sheep-life-standard-deviation
 sheep-life-standard-deviation
 0
 100
-50.0
+0.0
 1
 1
 NIL
@@ -479,7 +479,7 @@ wolf-life-standard-deviation
 wolf-life-standard-deviation
 0
 100
-50.0
+0.0
 1
 1
 NIL
@@ -921,6 +921,50 @@ setup
 repeat 75 [ go ]
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="age-battle-0SD" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="5000"/>
+    <metric>count turtles</metric>
+    <metric>ticks</metric>
+    <enumeratedValueSet variable="wolf-gain-from-food">
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="show-energy?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="sheep-life-standard-deviation">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-number-wolves">
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="wolf-reproduce">
+      <value value="5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-number-sheep">
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="wolf-life-standard-deviation">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="model-version">
+      <value value="&quot;sheep-wolves-grass&quot;"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="wolf-lifespan" first="10" step="10" last="100"/>
+    <enumeratedValueSet variable="sheep-gain-from-food">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="sheep-lifespan" first="10" step="10" last="100"/>
+    <enumeratedValueSet variable="grass-regrowth-time">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="sheep-reproduce">
+      <value value="5"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
